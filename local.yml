@@ -23,11 +23,13 @@
   - name: Install `oh-my-zsh`
     ansible.builtin.shell:
       cmd: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    args:
+      creates: "{{ ansible_env.HOME }}/.oh-my-zsh/oh-my-zsh.sh"
 
   - name: Copy `.zshrc` file
     ansible.builtin.copy:
       src: files/work/xelix/.zshrc
-      dest: /home/hh/.zshrc
+      dest: "{{ ansible_env.HOME }}/.zshrc"
       owner: hh
       group: hh
       mode: u=rw,g=r,o=r
