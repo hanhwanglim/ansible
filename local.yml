@@ -36,3 +36,8 @@
       owner: hh
       group: hh
       mode: u=rw,g=r,o=r
+
+  - name: change shell to zsh
+    ansible.builtin.user:
+      name: hh
+      shell: /usr/bin/zsh
