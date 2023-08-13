@@ -13,6 +13,7 @@
       package:
         - wget
         - curl
+        - vim
       state: present
 
   - name: Install zsh
@@ -21,15 +22,17 @@
       state: present
 
   - name: Install `oh-my-zsh`
+    become_user: hh
     ansible.builtin.shell:
       cmd: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     args:
-      creates: "{{ ansible_env.HOME }}/.oh-my-zsh/oh-my-zsh.sh"
+      creates: "~hh/.oh-my-zsh/oh-my-zsh.sh"
 
   - name: Copy `.zshrc` file
+    become_user: hh
     ansible.builtin.copy:
       src: files/work/xelix/.zshrc
-      dest: "{{ ansible_env.HOME }}/.zshrc"
+      dest: "~hh/.zshrc"
       owner: hh
       group: hh
       mode: u=rw,g=r,o=r
