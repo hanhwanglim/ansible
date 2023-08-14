@@ -2,42 +2,22 @@
   connection: local
   become: true
 
+  pre_tasks:
+    - name: Update repositories cache and upgrade packages
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
+
   tasks:
-  - name: Update repositories cache and upgrade packages
-    ansible.builtin.apt:
-      update_cache: true
-      upgrade: true
+    - name: Install important packages
+      ansible.builtin.apt:
+        package:
+          - wget
+          - curl
+          - vim
+          - git
+        state: present
 
-  - name: Install packages
-    ansible.builtin.apt:
-      package:
-        - wget
-        - curl
-        - vim
-      state: present
-
-  - name: Install zsh
-    ansible.builtin.apt:
-      name: zsh
-      state: present
-
-  - name: Install `oh-my-zsh`
-    become_user: hh
-    ansible.builtin.shell:
-      cmd: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    args:
-      creates: "~hh/.oh-my-zsh/oh-my-zsh.sh"
-
-  - name: Copy `.zshrc` file
-    become_user: hh
-    ansible.builtin.copy:
-      src: files/work/xelix/.zshrc
-      dest: "~hh/.zshrc"
-      owner: hh
-      group: hh
-      mode: u=rw,g=r,o=r
-
-  - name: change shell to zsh
-    ansible.builtin.user:
-      name: hh
-      shell: /usr/bin/zsh
+    - name: Install zsh and oh-my-zsh
+      ansible.builtin.include_role:
+        name: zsh
