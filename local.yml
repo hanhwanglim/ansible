@@ -21,3 +21,55 @@
     - name: Install zsh and oh-my-zsh
       ansible.builtin.include_role:
         name: zsh
+
+    - name: Install Python dependencies (Debian base)
+      ansible.builtin.apt:
+        name:
+          - build-essential
+          - libssl-dev
+          - zlib1g-dev
+          - libbz2-dev
+          - libreadline-dev
+          - libsqlite3-dev
+          - curl
+          - libncursesw5-dev
+          - xz-utils
+          - tk-dev
+          - libxml2-dev
+          - libxmlsec1-dev
+          - libffi-dev
+          - liblzma-dev
+        state: present
+
+    - name: Install Pyenv
+      become_user: "hh"
+      ansible.builtin.shell: set -o pipefail && curl https://pyenv.run | bash
+      args:
+        executable: /bin/bash
+        creates: "~hh/.pyenv/bin/pyenv"
+
+    - name: Install Python version 3.11.4
+      become_user: "hh"
+      ansible.builtin.command: pyenv install 3.11.4
+      args:
+        creates: "~hh/.pyenv/versions/3.11.4/bin/python"
+      environment:
+        PATH: "~hh/.pyenv/bin:~hh/.pyenv/shims:{{ ansible_env.PATH }}"
+
+    - name: Set global python version
+      become_user: "hh"
+      ansible.builtin.command: pyenv global 3.11.4
+      register: python_version
+      environment:
+        PATH: "~hh/.pyenv/bin:~hh/.pyenv/shims:{{ ansible_env.PATH }}"
+      changed_when:
+        python_version.rc == 0
+
+    - name: Install poetry
+      become_user: "hh"
+      ansible.builtin.shell: curl -sSL https://install.python-poetry.org | python3 -
+      args:
+        executable: /bin/bash
+        creates: "~hh/.local/share/pypoetry/VERSION"
+      environment:
+        PATH: "~hh/.pyenv/bin:~hh/.pyenv/shims:{{ ansible_env.PATH }}"
