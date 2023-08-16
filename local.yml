@@ -70,9 +70,12 @@
 
     - name: Install poetry
       become_user: "hh"
-      ansible.builtin.shell: curl -sSL https://install.python-poetry.org | python3 -
+      ansible.builtin.shell: set -o pipefail && curl -sSL https://install.python-poetry.org | python3 -
+      register: install_poetry
       args:
         executable: /bin/bash
         creates: "~hh/.local/share/pypoetry/VERSION"
       environment:
         PATH: "~hh/.pyenv/bin:~hh/.pyenv/shims:{{ ansible_env.PATH }}"
+      changed_when:
+        install_poetry.rc == 0
