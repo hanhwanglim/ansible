@@ -49,7 +49,7 @@
 
 - name: Install Python version {{ python_version }}
   become_user: "{{ user }}"
-  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv install {{ python_version|quote }}
+  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv install {{ python_version | quote }}
   args:
     executable: /bin/bash
     creates: "~{{ user }}/.pyenv/versions/{{ python_version }}/bin/python"
@@ -58,7 +58,7 @@
 
 - name: Set global python version
   become_user: "{{ user }}"
-  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv global {{ python_version|quote }}
+  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv global {{ python_version | quote }}
   register: set_global_version
   args:
     executable: /bin/bash

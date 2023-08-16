@@ -19,7 +19,7 @@
     group: "{{ user }}"
     mode: u=rw,g=r,o=r
 
-- name: change shell to zsh
+- name: Change shell to zsh
   ansible.builtin.user:
     name: "{{ user }}"
     shell: /usr/bin/zsh
