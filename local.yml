@@ -50,16 +50,19 @@
 
     - name: Install Python version 3.11.4
       become_user: "hh"
-      ansible.builtin.command: pyenv install 3.11.4
+      ansible.builtin.shell: eval "$(pyenv init -)" && pyenv install 3.11.4
       args:
+        executable: /bin/bash
         creates: "~hh/.pyenv/versions/3.11.4/bin/python"
       environment:
         PATH: "~hh/.pyenv/bin:~hh/.pyenv/shims:{{ ansible_env.PATH }}"
 
     - name: Set global python version
       become_user: "hh"
-      ansible.builtin.command: pyenv global 3.11.4
+      ansible.builtin.shell: eval "$(pyenv init -)" && pyenv global 3.11.4
       register: python_version
+      args:
+        executable: /bin/bash
       environment:
         PATH: "~hh/.pyenv/bin:~hh/.pyenv/shims:{{ ansible_env.PATH }}"
       changed_when:
