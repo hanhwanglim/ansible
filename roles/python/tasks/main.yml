@@ -1,0 +1,80 @@
+- name: Install Python dependencies (Debian base)
+  when: ansible_facts["distribution"] == Debian
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - curl
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - libffi-dev
+      - liblzma-dev
+    state: present
+
+- name: Install Python dependencies (Fedora)
+  when: ansible_facts["distribution"] == Fedora
+  ansible.builtin.dnf:
+    name:
+      - make
+      - gcc
+      - patch
+      - zlib-devel
+      - bzip2
+      - bzip2-devel
+      - readline-devel
+      - sqlite
+      - sqlite-devel
+      - openssl-devel
+      - tk-devel
+      - libffi-devel
+      - xz-devel
+      - libuuid-devel
+      - gdbm-devel
+      - libnsl2-devel
+    state: present
+
+- name: Install Pyenv
+  become_user: "{{ user }}"
+  ansible.builtin.shell: set -o pipefail && curl https://pyenv.run | bash
+  args:
+    executable: /bin/bash
+    creates: "~{{ user }}/.pyenv/bin/pyenv"
+
+- name: Install Python version {{ python_version:quote }}
+  become_user: "{{ user }}"
+  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv install {{ python_version:quote }}
+  args:
+    executable: /bin/bash
+    creates: "~{{ user }}/.pyenv/versions/{{ python_version:quote }}/bin/python"
+  environment:
+    PATH: "~{{ user }}/.pyenv/bin:~{{ user }}/.pyenv/shims:{{ ansible_env.PATH }}"
+
+- name: Set global python version
+  become_user: "{{ user }}"
+  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv global {{ python_version:quote }}
+  register: set_global_version
+  args:
+    executable: /bin/bash
+  environment:
+    PATH: "~{{ user }}/.pyenv/bin:~{{ user }}/.pyenv/shims:{{ ansible_env.PATH }}"
+  changed_when:
+    set_global_version.rc == 0
+
+- name: Install poetry
+  become_user: "{{ user }}"
+  ansible.builtin.shell: set -o pipefail && curl -sSL https://install.python-poetry.org | python3 -
+  register: install_poetry
+  args:
+    executable: /bin/bash
+    creates: "~{{ user }}/.local/share/pypoetry/VERSION"
+  environment:
+    PATH: "~{{ user }}/.pyenv/bin:~{{ user }}/.pyenv/shims:{{ ansible_env.PATH }}"
+  changed_when:
+    install_poetry.rc == 0
