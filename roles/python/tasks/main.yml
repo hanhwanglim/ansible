@@ -1,5 +1,5 @@
 - name: Install Python dependencies (Debian base)
-  when: ansible_facts["distribution"] == Debian
+  when: ansible_facts["os_family"] == "Debian"
   ansible.builtin.apt:
     name:
       - build-essential
@@ -19,7 +19,7 @@
     state: present
 
 - name: Install Python dependencies (Fedora)
-  when: ansible_facts["distribution"] == Fedora
+  when: ansible_facts["distribution"] == "Fedora"
   ansible.builtin.dnf:
     name:
       - make
@@ -47,18 +47,18 @@
     executable: /bin/bash
     creates: "~{{ user }}/.pyenv/bin/pyenv"
 
-- name: Install Python version {{ python_version:quote }}
+- name: Install Python version {{ python_version }}
   become_user: "{{ user }}"
-  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv install {{ python_version:quote }}
+  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv install {{ python_version|quote }}
   args:
     executable: /bin/bash
-    creates: "~{{ user }}/.pyenv/versions/{{ python_version:quote }}/bin/python"
+    creates: "~{{ user }}/.pyenv/versions/{{ python_version }}/bin/python"
   environment:
     PATH: "~{{ user }}/.pyenv/bin:~{{ user }}/.pyenv/shims:{{ ansible_env.PATH }}"
 
 - name: Set global python version
   become_user: "{{ user }}"
-  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv global {{ python_version:quote }}
+  ansible.builtin.shell: eval "$(pyenv init -)" && pyenv global {{ python_version|quote }}
   register: set_global_version
   args:
     executable: /bin/bash
