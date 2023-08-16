@@ -21,3 +21,7 @@
     - name: Install zsh and oh-my-zsh
       ansible.builtin.include_role:
         name: zsh
+
+    - name: Install Pyenv, Python and Poetry
+      ansible.builtin.include_role:
+        name: python
