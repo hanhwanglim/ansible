@@ -26,3 +26,15 @@
     - name: Install Pyenv, Python and Poetry
       ansible.builtin.include_role:
         name: python
+
+    - name: Install nvm
+      ansible.builtin.shell: set -o pipefail && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
+      args:
+        executable: /bin/bash
+        creates: "~hh/.nvm/nvm.sh"
+
+    - name: Install node
+      ansible.builtin.shell: "~hh/.nvm/nvm.sh && nvm install node"
+      args:
+        executable: /bin/bash
+        creates: "~hh/.nvm/versions/node/v20.5.1/bin/node"
