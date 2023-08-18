@@ -6,7 +6,7 @@
     creates: "~{{ user }}/.nvm/nvm.sh"
 
 - name: Install node
-  ansible.builtin.shell: "~{{ user | quote }}/.nvm/nvm.sh && nvm install {{ node_version | quote }}"
+  ansible.builtin.shell: "source ~{{ user | quote }}/.nvm/nvm.sh && nvm install {{ node_version | quote }}"
   become_user: "{{ user }}"
   args:
     executable: /bin/bash
