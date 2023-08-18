@@ -30,3 +30,7 @@
     - name: Install nvm and node
       ansible.builtin.include_role:
         name: node
+
+    - name: Install docker
+      ansible.builtin.include_role:
+        name: docker

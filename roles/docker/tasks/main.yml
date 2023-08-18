@@ -1,0 +1,49 @@
+- name: Uninstall old / unofficial packages
+  ansible.builtin.apt:
+    package:
+      - docker.io
+      - docker-doc
+      - docker-compose
+      - podman-docker
+      - containerd
+      - runc
+    state: absent
+
+- name: Install docker dependencies
+  ansible.builtin.apt:
+    package:
+      - ca-certificates
+      - gnupg
+    state: present
+    update_cache: true
+
+- name: Add Docker GPG key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu $(echo "lsb_release -sc") stable
+    state: present
+
+
+- name: Remove configuration and datafiles
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  become: true
+  with_items:
+    - "~{{ user }}/.docker/desktop"
+    - "/usr/local/bin/com.docker.cli"
+
+- name: Uninstall docker desktop and purge systemd service files
+  ansible.builtin.apt:
+    package:
+      - docker-desktop
+    state: absent
+    purge: true
+
+- name: Download and install Docker DEB package
+  ansible.builtin.apt:
+    deb: "https://desktop.docker.com/linux/main/amd64/docker-desktop-4.22.0-amd64.deb"
