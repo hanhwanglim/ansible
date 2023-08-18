@@ -9,8 +9,7 @@
         update_cache: true
         upgrade: true
 
-  tasks:
-    - name: Install important packages
+    - name: Install essential packages
       ansible.builtin.apt:
         package:
           - wget
@@ -19,6 +18,7 @@
           - git
         state: present
 
+  tasks:
     - name: Install zsh and oh-my-zsh
       ansible.builtin.include_role:
         name: zsh
