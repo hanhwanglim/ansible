@@ -1,0 +1,15 @@
+- name: Install nvm
+  ansible.builtin.shell: >
+    set -o pipefail
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v{{ nvm_version | quote }}/install.sh | bash
+  become_user: "{{ user }}"
+  args:
+    executable: /bin/bash
+    creates: "~{{ user }}/.nvm/nvm.sh"
+
+- name: Install node
+  ansible.builtin.shell: "source ~{{ user | quote }}/.nvm/nvm.sh && nvm install {{ node_version | quote }}"
+  become_user: "{{ user }}"
+  args:
+    executable: /bin/bash
+    creates: "~{{ user }}/.nvm/versions/node/v{{ node_version }}/bin/node"
