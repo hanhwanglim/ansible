@@ -34,3 +34,7 @@
     - name: Install docker
       ansible.builtin.include_role:
         name: docker
+
+    - name: Install postgresql
+      ansible.builtin.include_role:
+        name: postgresql
