@@ -1,1 +1,4 @@
 user: hh
+docker_gpg_url: https://download.docker.com/linux/ubuntu/gpg
+docker_repo_url: deb https://download.docker.com/linux/ubuntu jammy stable
+docker_deb_url: https://desktop.docker.com/linux/main/amd64/docker-desktop-4.22.0-amd64.deb
