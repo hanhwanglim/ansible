@@ -1,8 +1,7 @@
 - name: Add repository signing key
-  ansible.builtin.get_url:
+  ansible.builtin.apt_key:
     url: https://packages.redis.io/gpg
-    dest: "/usr/share/keyrings/redis-archive-keyring.gpg"
-    mode: "0644"
+    keyring: "/usr/share/keyrings/redis-archive-keyring.gpg"
 
 - name: Add repository index
   ansible.builtin.apt_repository:
