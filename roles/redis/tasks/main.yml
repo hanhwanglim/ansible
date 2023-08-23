@@ -1,0 +1,14 @@
+- name: Add repository signing key
+  ansible.builtin.get_url:
+    url: https://packages.redis.io/gpg
+    dest: "/usr/share/keyrings/redis-archive-keyring.gpg"
+    mode: "0644"
+
+- name: Add repository index
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb {{ ansible_distribution_release }} main"
+
+- name: Install Redis
+  ansible.builtin.apt:
+    name: redis
+    state: present

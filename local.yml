@@ -16,25 +16,41 @@
           - curl
           - vim
           - git
+          - lsb-release
         state: present
 
   tasks:
-    - name: Install zsh and oh-my-zsh
-      ansible.builtin.include_role:
-        name: zsh
+    - name: Add repository signing key
+      ansible.builtin.get_url:
+        url: https://packages.redis.io/gpg
+        dest: "/usr/share/keyrings/redis-archive-keyring.gpg"
+        mode: "0644"
 
-    - name: Install Pyenv, Python and Poetry
-      ansible.builtin.include_role:
-        name: python
+    - name: Add repository index
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb {{ ansible_distribution_release }} main"
 
-    - name: Install nvm and node
-      ansible.builtin.include_role:
-        name: node
+    - name: Install Redis
+      ansible.builtin.apt:
+        name: redis
+        state: present
 
-    - name: Install docker
-      ansible.builtin.include_role:
-        name: docker
+    # - name: Install zsh and oh-my-zsh
+    #   ansible.builtin.include_role:
+    #     name: zsh
 
-    - name: Install postgresql
-      ansible.builtin.include_role:
-        name: postgresql
+    # - name: Install Pyenv, Python and Poetry
+    #   ansible.builtin.include_role:
+    #     name: python
+
+    # - name: Install nvm and node
+    #   ansible.builtin.include_role:
+    #     name: node
+
+    # - name: Install docker
+    #   ansible.builtin.include_role:
+    #     name: docker
+
+    # - name: Install postgresql
+    #   ansible.builtin.include_role:
+    #     name: postgresql
