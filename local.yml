@@ -16,6 +16,7 @@
           - curl
           - vim
           - git
+          - lsb-release
         state: present
 
   tasks:
@@ -38,3 +39,7 @@
     - name: Install postgresql
       ansible.builtin.include_role:
         name: postgresql
+
+    - name: Install Redis
+      ansible.builtin.include_role:
+        name: redis
