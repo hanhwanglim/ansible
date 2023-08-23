@@ -42,15 +42,15 @@
         keyring: /usr/share/keyrings/rabbitmq.9F4587F226208342.gpg
 
     - name: Add Rabbitmq repository to source
-      ansible.builtin.copy:
-        src: files/rabbitmq/rabbitmq.list
-        dest: /etc/apt/source.list.d/rabbitmq.list
+      ansible.builtin.template:
+        src: files/rabbitmq/rabbitmq.list.j2
+        dest: /etc/apt/sources.list.d/rabbitmq.list
         mode: "0644"
 
     - name: Install Erlang
       ansible.builtin.apt:
         name:
-          - rlang-base
+          - erlang-base
           - erlang-asn1
           - erlang-crypto
           - erlang-eldap
