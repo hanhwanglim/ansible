@@ -70,7 +70,7 @@
 
     - name: Install Rabbmitmq
       ansible.builtin.apt:
-        name: rabbmitmq-server
+        name: rabbitmq-server
         state: build-dep
 
     # - name: Install zsh and oh-my-zsh
