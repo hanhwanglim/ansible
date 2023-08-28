@@ -10,16 +10,22 @@
   args:
     creates: "~{{ user }}/.oh-my-zsh/oh-my-zsh.sh"
 
-- name: Copy `.zshrc` file
+- name: Copy dotfiles folder
   become_user: hh
   ansible.builtin.copy:
-    src: "{{ zsh_file }}"
-    dest: "~{{ user }}/.zshrc"
+    src: "files/dotfiles"
+    dest: "~{{ user }}/.dotfiles"
     owner: "{{ user }}"
     group: "{{ user }}"
-    mode: u=rw,g=r,o=r
+    mode: "0755"
 
 - name: Change shell to zsh
   ansible.builtin.user:
     name: "{{ user }}"
     shell: /usr/bin/zsh
+
+- name: Add symlinks
+  ansible.builtin.command:
+    cmd: "~{{ user }}/.dotfiles/configure.sh"
+  args:
+    creates: "~{{ user }}/.zshrc"
