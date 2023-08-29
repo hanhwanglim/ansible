@@ -26,7 +26,8 @@
 
 - name: Remove default zshrc file
   ansible.builtin.file:
-    name: "{{ user }}/.zshrc"
+    name: "~{{ user }}/.zshrc"
+    state: absent
 
 - name: Add symlinks
   become_user: "{{ user }}"
