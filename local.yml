@@ -71,7 +71,7 @@
     - name: Install Rabbmitmq
       ansible.builtin.apt:
         name: rabbitmq-server
-        state: build-dep
+        state: present
 
     # - name: Install zsh and oh-my-zsh
     #   ansible.builtin.include_role:
