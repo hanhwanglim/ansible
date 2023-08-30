@@ -17,6 +17,8 @@
           - vim
           - git
           - lsb-release
+          - unzip
+          - make
         state: present
 
   tasks:
@@ -24,26 +26,42 @@
       ansible.builtin.include_role:
         name: zsh
 
-    - name: Install Pyenv, Python and Poetry
-      ansible.builtin.include_role:
-        name: python
+    # - name: Install Pyenv, Python and Poetry
+    #   ansible.builtin.include_role:
+    #     name: python
 
-    - name: Install nvm and node
-      ansible.builtin.include_role:
-        name: node
+    # - name: Install nvm and node
+    #   ansible.builtin.include_role:
+    #     name: node
 
-    - name: Install docker
-      ansible.builtin.include_role:
-        name: docker
+    # - name: Install docker
+    #   ansible.builtin.include_role:
+    #     name: docker
 
-    - name: Install postgresql
-      ansible.builtin.include_role:
-        name: postgresql
+    # - name: Install postgresql
+    #   ansible.builtin.include_role:
+    #     name: postgresql
 
-    - name: Install Redis
-      ansible.builtin.include_role:
-        name: redis
+    # - name: Install Redis
+    #   ansible.builtin.include_role:
+    #     name: redis
 
-    - name: Install Rabbitmq
-      ansible.builtin.include_role:
-        name: rabbitmq
+    # - name: Install Rabbitmq
+    #   ansible.builtin.include_role:
+    #     name: rabbitmq
+
+    - name: Download package
+      ansible.builtin.get_url:
+        url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+        dest: "~hh/awscliv2.zip"
+        mode: "0664"
+
+    - name: Unzip package
+      ansible.builtin.unarchive:
+        src: "~hh/awscliv2.zip"
+        dest: "~hh"
+
+    - name: Install
+      ansible.builtin.command:
+        cmd: "~hh/aws/install"
+        creates: /usr/local/bin/aws
