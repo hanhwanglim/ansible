@@ -11,8 +11,12 @@ This repository contains an Ansible playbook that automates the setup of a local
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone git@github.com:hanhwanglim/ansible.git
+   git clone --recursive-submodules git@github.com:hanhwanglim/ansible.git
    cd ansible
    ```
 
-2. Run `ansible-playbook local.yml --ask-become-pass --ask-vault-pass`
+2. Run Ansible:
+
+   ```bash
+   make run
+   ```
