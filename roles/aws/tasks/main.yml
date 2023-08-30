@@ -1,0 +1,23 @@
+- name: Download package
+  ansible.builtin.get_url:
+    url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    dest: "~{{ user }}/awscliv2.zip"
+    mode: "0664"
+
+- name: Unzip package
+  ansible.builtin.unarchive:
+    src: "~{{ user }}/awscliv2.zip"
+    dest: "~{{ user }}"
+
+- name: Install
+  ansible.builtin.command:
+    cmd: "~{{ user }}/aws/install"
+    creates: /usr/local/bin/aws
+
+- name: Cleanup
+  ansible.builtin.file:
+    path: "~{{ user }}/{{ item }}"
+    state: absent
+  with_items:
+    - aws
+    - awscliv2.zip

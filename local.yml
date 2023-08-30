@@ -17,6 +17,8 @@
           - vim
           - git
           - lsb-release
+          - unzip
+          - make
         state: present
 
   tasks:
@@ -47,3 +49,7 @@
     - name: Install Rabbitmq
       ansible.builtin.include_role:
         name: rabbitmq
+
+    - name: Install aws cli
+      ansible.builtin.include_role:
+        name: aws
