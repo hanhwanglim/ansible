@@ -1,13 +1,7 @@
-- name: Add repository signing key
-  ansible.builtin.apt_key:
-    url: https://packages.redis.io/gpg
-    keyring: "/usr/share/keyrings/redis-archive-keyring.gpg"
+- name: Install Redis (Ubuntu)
+  ansible.builtin.include_tasks: ubuntu.yml
+  when: ansible_facts["distribution"] == "Ubuntu"
 
-- name: Add repository index
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb {{ ansible_distribution_release }} main"
-
-- name: Install Redis
-  ansible.builtin.apt:
-    name: redis
-    state: present
+- name: Install Redis (Fedora)
+  ansible.builtin.include_tasks: fedora.yml
+  when: ansible_facts["distribution"] == "Fedora"

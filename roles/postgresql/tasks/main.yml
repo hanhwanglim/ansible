@@ -1,15 +1,7 @@
-- name: Import PostgreSQL repository signing key
-  ansible.builtin.apt_key:
-    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
-    state: present
+- name: Install PostgreSQL (Ubuntu)
+  ansible.builtin.include_tasks: ubuntu.yml
+  when: ansible_facts["distribution"] == "Ubuntu"
 
-- name: Add PostgreSQL repository configuration
-  ansible.builtin.apt_repository:
-    repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
-    state: present
-    filename: "pgdg"
-
-- name: Install PostgreSQL
-  ansible.builtin.apt:
-    name: postgresql
-    state: present
+- name: Install PostgreSQL (Fedora)
+  ansible.builtin.include_tasks: fedora.yml
+  when: ansible_facts["distribution"] == "Fedora"

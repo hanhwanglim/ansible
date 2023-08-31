@@ -1,0 +1,6 @@
+- name: Install PostgreSQL
+  ansible.builtin.dnf:
+    name:
+      - postgresql-server
+      - postgresql-contrib
+    state: present

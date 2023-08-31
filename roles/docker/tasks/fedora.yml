@@ -1,0 +1,15 @@
+- name: Install required packages
+  ansible.builtin.dnf:
+    name: dnf-plugins-core
+    state: present
+
+- name: Add Docker repository
+  ansible.builtin.command:
+    cmd: dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install Docker
+  ansible.builtin.dnf:
+    name: https://desktop.docker.com/linux/main/amd64/docker-desktop-4.22.1-x86_64.rpm
+    state: present
