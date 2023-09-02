@@ -1,0 +1,81 @@
+- name: Playbook for downloading and setting up Xelix repositories
+  hosts: localhost
+  become: true
+  connection: local
+
+  pre_tasks:
+    - name: Install build and dependencies (Ubuntu)
+      ansible.builtin.apt:
+        name:
+          - default-jre
+          - libcurl4-openssl-dev
+          - liblz4-dev
+          - libpango-1.0-0
+          - libpangoft2-1.0-0
+          - libpq-dev
+          - libsnappy-dev
+          - libssl-dev
+          - locales-all
+          - xmlsec1
+          - curl
+          - autoconf
+          - automake
+          - libtool
+          - pkg-config
+        state: present
+      when: ansible_facts["distribution"] == "Ubuntu"
+
+    - name: Install build and system dependencies (Fedora)
+      ansible.builtin.dnf:
+        name:
+          - java-latest-openjdk
+          - curl
+          - autoconf
+          - automake
+          - libtool
+          - pkgconfig
+        state: present
+      when: ansible_facts["distribution"] == "Fedora"
+
+  tasks:
+    - name: Install Xelix repositories
+      ansible.builtin.git:
+        repo: "git@github.com:xelixdev/{{ item }}.git"
+        dest: "~hh/dev/xelix/{{ item }}"
+        version: main
+      with_items:
+        - access-scripts
+        - email-extractor
+        - file-processing
+        - graph-webhook
+        - internal-dashboard
+        - onboarding-portal-backend
+        - platform-api
+        - platform-front-end
+        - terraform
+
+    - name: Install libpostal
+      block:
+        - name: Download libpostal repository
+          ansible.builtin.git:
+            repo: https://github.com/openvenues/libpostal
+            dest: /tmp/libpostal
+            version: master
+            depth: 1
+
+        - name: Build libpostal
+          ansible.builtin.shell:
+            chdir: /tmp/libpostal
+            cmd: |
+              ./bootstrap.sh
+              ./configure
+              make -j4
+              make install
+              ldconfig
+          args:
+            creates: /usr/local/lib/pkgconfig/libpostal.pc
+
+        - name: Cleanup
+          ansible.builtin.file:
+            path: /tmp/libpostal
+            state: absent
