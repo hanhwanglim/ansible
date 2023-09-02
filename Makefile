@@ -1,5 +1,11 @@
-run:
-	@ansible-playbook local.yml --ask-become-pass --ask-vault-pass
+run-local:
+	@ansible-playbook playbooks/local.yml --ask-become-pass --ask-vault-pass
 
-debug:
-	@ansible-playbook local.yml --ask-become-pass --ask-vault-pass -vvvvvv
+debug-local:
+	@ansible-playbook playbooks/local.yml --ask-become-pass --ask-vault-pass -vvvvvv
+
+run-work:
+	@ansible-playbook playbooks/work.yml --ask-become-pass --ask-vault-pass
+
+debug-work:
+	@ansible-playbook playbooks/work.yml --ask-become-pass --ask-vault-pass -vvvvvv
