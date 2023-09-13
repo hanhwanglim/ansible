@@ -21,7 +21,7 @@
 
 - name: Add Rabbitmq repository to source
   ansible.builtin.template:
-    src: files/rabbitmq/rabbitmq.list.j2
+    src: templates/rabbitmq.list.j2
     dest: /etc/apt/sources.list.d/rabbitmq.list
     mode: "0644"
 
