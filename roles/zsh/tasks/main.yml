@@ -10,10 +10,18 @@
   args:
     creates: "~{{ user }}/.oh-my-zsh/oh-my-zsh.sh"
 
+- name: Clone dotfiles folder
+  become_user: hh
+  ansible.builtin.git:
+    repo: git@github.com:hanhwanglim/dotfiles.git
+    dest: /tmp/dotfiles
+    version: main
+    depth: 1
+
 - name: Copy dotfiles folder
   become_user: hh
   ansible.builtin.copy:
-    src: "files/dotfiles"
+    src: "/tmp/dotfiles"
     dest: "~{{ user }}"
     owner: "{{ user }}"
     group: "{{ user }}"
@@ -32,6 +40,37 @@
 - name: Add symlinks
   become_user: "{{ user }}"
   ansible.builtin.command:
-    cmd: "~{{ user }}/dotfiles/configure.sh"
+    cmd: "python3 configure.py work"
   args:
     creates: "~{{ user }}/.zshrc"
+    chdir: "~hh/dotfiles"
+
+- name: Install plugins
+  block:
+    - name: Install direnv
+      ansible.builtin.shell:
+        cmd: set -o pipefail && curl -sfL https://direnv.net/install.sh | bash
+      args:
+        executable: /bin/bash
+        creates: "/usr/bin/direnv"
+      environment:
+        bin_path: "/usr/bin"
+    - name: Install Atuin
+      become_user: hh
+      ansible.builtin.shell:
+        cmd: bash <(curl https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh)
+      args:
+        executable: /bin/bash
+        creates: "/usr/bin/atuin"
+    - name: Install zsh-autosuggestions
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions
+        dest: ~hh/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        version: master
+        depth: 1
+    - name: Install zsh-syntax-highlighting
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+        dest: ~hh/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        version: master
+        depth: 1
