@@ -51,6 +51,7 @@
       become_user: hh
       ansible.builtin.shell:
         cmd: set -o pipefail && curl -sfL https://direnv.net/install.sh | bash
+        executable: /bin/bash
         environment:
           - bin_path: "/usr/bin"
       args:
