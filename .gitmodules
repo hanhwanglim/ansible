@@ -1,3 +1,0 @@
-[submodule "files/dotfiles"]
-	path = roles/zsh/files/dotfiles
-	url = git@github.com:hanhwanglim/dotfiles.git
