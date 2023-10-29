@@ -54,8 +54,8 @@
       args:
         executable: /bin/bash
         creates: "/usr/bin/direnv"
-        environment:
-          - bin_path: "/usr/bin"
+      environment:
+        bin_path: "/usr/bin"
     - name: Install Atuin
       become_user: hh
       ansible.builtin.shell:
