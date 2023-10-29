@@ -4,10 +4,16 @@
   become: true
 
   pre_tasks:
-    - name: Update repositories cache and upgrade packages
+    - name: Update repositories cache and upgrade packages (Ubuntu)
       ansible.builtin.apt:
         update_cache: true
         upgrade: true
+      when: ansible_facts["distribution"] == "Ubuntu"
+
+    - name: Update repositories cache and upgrade packages (Fedora)
+      ansible.builtin.dnf:
+        update_cache: true
+      when: ansible_facts["distribution"] == "Fedora"
 
     - name: Install essential packages
       ansible.builtin.apt:
@@ -20,6 +26,20 @@
           - unzip
           - make
         state: present
+      when: ansible_facts["distribution"] == "Ubuntu"
+
+    - name: Install essential packages
+      ansible.builtin.dnf:
+        package:
+          - wget
+          - curl
+          - vim
+          - git
+          - lsb-release
+          - unzip
+          - make
+        state: present
+      when: ansible_facts["distribution"] == "Fedora"
 
   tasks:
     - name: Install zsh and oh-my-zsh
