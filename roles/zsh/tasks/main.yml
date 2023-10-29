@@ -42,7 +42,7 @@
     cmd: "python configure.py work"
   args:
     creates: "~{{ user }}/.zshrc"
-    chdir: "~/{{ user }}/dotfiles"
+    chdir: "~{{ user }}/dotfiles"
 
 - name: Install plugins
   block:
