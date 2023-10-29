@@ -16,6 +16,7 @@
     repo: git@github.com:hanhwanglim/dotfiles.git
     dest: /tmp/dotfiles
     version: main
+    depth: 1
 
 - name: Copy dotfiles folder
   become_user: hh
@@ -38,9 +39,10 @@
 
 - name: Add symlinks
   become_user: "{{ user }}"
-  ansible.builtin.command:
-    cmd: "python configure.py work"
+  ansible.builtin.script:
+    cmd: "configure.py work"
   args:
+    executable: python3
     creates: "~{{ user }}/.zshrc"
     chdir: "~{{ user }}/dotfiles"
 
