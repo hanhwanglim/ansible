@@ -44,7 +44,7 @@
   args:
     executable: python3
     creates: "~{{ user }}/.zshrc"
-    chdir: "~{{ user }}/dotfiles"
+    chdir: "~hh/dotfiles"
 
 - name: Install plugins
   block:
