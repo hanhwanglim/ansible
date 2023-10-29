@@ -39,10 +39,9 @@
 
 - name: Add symlinks
   become_user: "{{ user }}"
-  ansible.builtin.script:
-    cmd: "configure.py work"
+  ansible.builtin.command:
+    cmd: "python3 configure.py work"
   args:
-    executable: python3
     creates: "~{{ user }}/.zshrc"
     chdir: "~hh/dotfiles"
 
