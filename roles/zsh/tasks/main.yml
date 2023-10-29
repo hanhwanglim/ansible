@@ -60,4 +60,5 @@
       ansible.builtin.shell:
         cmd: bash <(curl https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh)
       args:
+        executable: /bin/bash
         creates: "/usr/bin/atuin"
