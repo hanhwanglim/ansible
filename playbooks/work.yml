@@ -43,6 +43,7 @@
       ansible.builtin.git:
         repo: "git@github.com:xelixdev/{{ item }}.git"
         dest: "~hh/dev/xelix/{{ item }}"
+        depth: 20
         version: main
       with_items:
         - access-scripts
