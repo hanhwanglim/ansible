@@ -96,6 +96,7 @@
       environment:
         PYCURL_SSL_LIBRARY: openssl
         LD_LIBRARY_PATH: /usr/local/lib
+        PATH: "~hh/.local/bin:{{ ansible_env.PATH }}"
       with_items:
         - access-scripts
         - email-extractor
