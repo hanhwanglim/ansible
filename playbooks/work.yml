@@ -38,48 +38,48 @@
       when: ansible_facts["distribution"] == "Fedora"
 
   tasks:
-    - name: Install Xelix repositories
-      become_user: hh
-      ansible.builtin.git:
-        repo: "git@github.com:xelixdev/{{ item }}.git"
-        dest: "~hh/dev/xelix/{{ item }}"
-        version: main
-      with_items:
-        - access-scripts
-        - email-extractor
-        - file-processing
-        - graph-webhook
-        - internal-dashboard
-        - onboarding-portal-backend
-        - platform-api
-        - platform-front-end
-        - terraform
+    # - name: Install Xelix repositories
+    #   become_user: hh
+    #   ansible.builtin.git:
+    #     repo: "git@github.com:xelixdev/{{ item }}.git"
+    #     dest: "~hh/dev/xelix/{{ item }}"
+    #     version: main
+    #   with_items:
+    #     - access-scripts
+    #     - email-extractor
+    #     - file-processing
+    #     - graph-webhook
+    #     - internal-dashboard
+    #     - onboarding-portal-backend
+    #     - platform-api
+    #     - platform-front-end
+    #     - terraform
 
-    - name: Install libpostal
-      block:
-        - name: Download libpostal repository
-          ansible.builtin.git:
-            repo: https://github.com/openvenues/libpostal
-            dest: /tmp/libpostal
-            version: master
-            depth: 1
+    # - name: Install libpostal
+    #   block:
+    #     - name: Download libpostal repository
+    #       ansible.builtin.git:
+    #         repo: https://github.com/openvenues/libpostal
+    #         dest: /tmp/libpostal
+    #         version: master
+    #         depth: 1
 
-        - name: Build libpostal
-          ansible.builtin.shell:
-            chdir: /tmp/libpostal
-            cmd: |
-              ./bootstrap.sh
-              ./configure
-              make -j4
-              make install
-              ldconfig
-          args:
-            creates: /usr/local/lib/pkgconfig/libpostal.pc
+    #     - name: Build libpostal
+    #       ansible.builtin.shell:
+    #         chdir: /tmp/libpostal
+    #         cmd: |
+    #           ./bootstrap.sh
+    #           ./configure
+    #           make -j4
+    #           make install
+    #           ldconfig
+    #       args:
+    #         creates: /usr/local/lib/pkgconfig/libpostal.pc
 
-        - name: Cleanup
-          ansible.builtin.file:
-            path: /tmp/libpostal
-            state: absent
+    #     - name: Cleanup
+    #       ansible.builtin.file:
+    #         path: /tmp/libpostal
+    #         state: absent
 
     - name: Install python packages
       become_user: hh
@@ -94,8 +94,8 @@
         environment:
           - PYCURL_SSL_LIBRARY: openssl
           - LD_LIBRARY_PATH: /usr/local/lib
-      register: poetry_install
-      changed_when: poetry_install.rc == 0
+      args:
+        creates: "~hh/.cache/pypoetry/virtualenvs/{{ item  }}*"
       with_items:
         - access-scripts
         - email-extractor
