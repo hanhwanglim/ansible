@@ -39,6 +39,7 @@
 
   tasks:
     - name: Install Xelix repositories
+      become_user: hh
       ansible.builtin.git:
         repo: "git@github.com:xelixdev/{{ item }}.git"
         dest: "~hh/dev/xelix/{{ item }}"
