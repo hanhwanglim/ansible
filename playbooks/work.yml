@@ -39,9 +39,11 @@
 
   tasks:
     - name: Install Xelix repositories
+      become_user: hh
       ansible.builtin.git:
         repo: "git@github.com:xelixdev/{{ item }}.git"
         dest: "~hh/dev/xelix/{{ item }}"
+        depth: 20
         version: main
       with_items:
         - access-scripts
@@ -80,37 +82,40 @@
             path: /tmp/libpostal
             state: absent
 
-    - name: Install python packages
-      become_user: hh
-      ansible.builtin.shell:
-        chdir: "~hh/dev/xelix/{{ item }}"
-        cmd: |
-          poetry shell
-          poetry config http-basic.codeartifact aws $CODEARTIFACT_TOKEN
-          poetry config http-basic.xelix-deps aws $CODEARTIFACT_TOKEN
-          poetry install --all-extras
-        executable: /usr/bin/zsh
-        environment:
-          - PYCURL_SSL_LIBRARY: openssl
-          - LD_LIBRARY_PATH: /usr/local/lib
-      register: poetry_install
-      changed_when: poetry_install.rc == 0
-      with_items:
-        - access-scripts
-        - email-extractor
-        - file-processing
-        - graph-webhook
-        - internal-dashboard
-        - onboarding-portal-backend
-        - platform-api
+    # - name: Install python packages
+    #   become_user: hh
+    #   ansible.builtin.shell:
+    #     chdir: "~hh/dev/xelix/{{ item }}"
+    #     cmd: |
+    #       source ~hh/.zshrc
+    #       export CODEARTIFACT_TOKEN=...
+    #       poetry shell
+    #       poetry config http-basic.codeartifact aws $CODEARTIFACT_TOKEN
+    #       poetry config http-basic.xelix-deps aws $CODEARTIFACT_TOKEN
+    #       poetry install --all-extras
+    #     executable: /usr/bin/zsh
+    #   args:
+    #     creates: "~hh/.cache/pypoetry/virtualenvs/{{ item }}*"
+    #   environment:
+    #     PYCURL_SSL_LIBRARY: openssl
+    #     LD_LIBRARY_PATH: /usr/local/lib
+    #     PATH: ~hh/.local/bin:{{ ansible_env.PATH }}
+    #   with_items:
+    #     - access-scripts
+    #     - email-extractor
+    #     - file-processing
+    #     - graph-webhook
+    #     - internal-dashboard
+    #     - onboarding-portal-backend
+    #     - platform-api
 
-    - name: Install yarn packages
-      become_user: hh
-      ansible.builtin.shell:
-        chdir: ~hh/dev/xelix/platform-front-end
-        cmd: |
-          npm install --global yarn
-          yarn
-        executable: /usr/bin/zsh
-      register: yarn_install
-      changed_when: yarn_install.rc == 0
+    # - name: Install yarn packages
+    #   become_user: hh
+    #   ansible.builtin.shell:
+    #     chdir: ~hh/dev/xelix/platform-front-end
+    #     cmd: |
+    #       npm install --global yarn
+    #       yarn
+    #     executable: /usr/bin/zsh
+    #   register: yarn_install
+    #   changed_when: yarn_install.rc == 0

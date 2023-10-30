@@ -1,0 +1,6 @@
+- name: Install RabbitMQ
+  ansible.builtin.dnf:
+    name:
+      - erlang
+      - rabbitmq-server
+    state: present
